@@ -1,0 +1,16 @@
+{
+	"tabWidth": 4,
+	"useTabs": true,
+	"semi": false,
+	"singleQuote": true,
+	"quoteProps": "consistent",
+	"jsxSingleQuote": true,
+	"trailingComma": "all",
+	"bracketSpacing": true,
+	"bracketSameLine": false,
+	"arrowParens": "always",
+	"printWidth": 150,
+	"sortingMethod": "alphabetical",
+	"stripNewlines": true,
+	"plugins": ["./node_modules/prettier-plugin-sort-imports/dist/index.js"]
+}
