@@ -10,7 +10,7 @@
 	"bracketSameLine": false,
 	"arrowParens": "always",
 	"printWidth": 150,
-	"sortingMethod": "alphabetical",
-	"stripNewlines": true,
-	"plugins": ["./node_modules/prettier-plugin-sort-imports/dist/index.js"]
+	"importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+	"importOrderSortSpecifiers": true,
+	"plugins": ["@trivago/prettier-plugin-sort-imports"]
 }
