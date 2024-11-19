@@ -15,13 +15,9 @@ const AuthenticatedNav = ({ pathname, user }: NavProps) => {
 	const [gravatarUrl, setGravatarUrl] = useState<string>('')
 
 	const handleLogoutClick = () => {
-		signOut(auth)
-			.then(() => {
-				console.log('User logged out')
-			})
-			.catch((error) => {
-				console.log('An error occurred while logging out the current user:', error)
-			})
+		signOut(auth).catch((error) => {
+			console.log('An error occurred while logging out the current user:', error)
+		})
 	}
 
 	useEffect(() => {
@@ -105,10 +101,6 @@ const UnauthenticatedNav = ({ pathname }: NavProps) => {
 const Header = () => {
 	const { user } = useAuthStore()
 	const { pathname } = useLocation()
-
-	useEffect(() => {
-		console.log('user', user)
-	}, [user])
 
 	if (user && user.uid) return <AuthenticatedNav pathname={pathname} user={user} />
 
