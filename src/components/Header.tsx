@@ -51,10 +51,7 @@ const AuthenticatedNav = ({ pathname, user }: NavProps) => {
 	}, [])
 
 	return (
-		<Navbar className='shadow-md sticky top-0'>
-			<Navbar.Brand as={Link} to={AppRoutes.Home()}>
-				<span className='self-center whitespace-nowrap text-xl font-semibold dark:text-white'>Secret Santa</span>
-			</Navbar.Brand>
+		<>
 			<div className='flex md:order-2 gap-2'>
 				{gravatarUrl && (
 					<Dropdown arrowIcon={false} inline label={<Avatar alt='User settings' img={gravatarUrl} rounded />}>
@@ -72,16 +69,13 @@ const AuthenticatedNav = ({ pathname, user }: NavProps) => {
 					Home
 				</Navbar.Link>
 			</Navbar.Collapse>
-		</Navbar>
+		</>
 	)
 }
 
 const UnauthenticatedNav = ({ pathname }: NavProps) => {
 	return (
-		<Navbar className='shadow-md sticky top-0'>
-			<Navbar.Brand as={Link} to={AppRoutes.Home()}>
-				<span className='self-center whitespace-nowrap text-xl font-semibold dark:text-white'>Secret Santa</span>
-			</Navbar.Brand>
+		<>
 			<Navbar.Toggle />
 			<Navbar.Collapse>
 				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Home()} active={pathname === AppRoutes.Home()}>
@@ -94,7 +88,7 @@ const UnauthenticatedNav = ({ pathname }: NavProps) => {
 					Register
 				</Navbar.Link>
 			</Navbar.Collapse>
-		</Navbar>
+		</>
 	)
 }
 
@@ -102,9 +96,14 @@ const Header = () => {
 	const { user } = useAuthStore()
 	const { pathname } = useLocation()
 
-	if (user && user.uid) return <AuthenticatedNav pathname={pathname} user={user} />
-
-	return <UnauthenticatedNav pathname={pathname} />
+	return (
+		<Navbar className='shadow-md sticky top-0 flex items-center' style={{ height: 60 }}>
+			<Navbar.Brand as={Link} to={AppRoutes.Home()}>
+				<span className='self-center whitespace-nowrap text-xl font-semibold dark:text-white'>Secret Santa</span>
+			</Navbar.Brand>
+			{user && user.uid ? <AuthenticatedNav pathname={pathname} user={user} /> : <UnauthenticatedNav pathname={pathname} />}
+		</Navbar>
+	)
 }
 
 export default Header
