@@ -20,11 +20,11 @@ const Register = () => {
 		createUserWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
 				const user = userCredential.user
-				console.log('new user registered', user)
+				console.log('New user registered', user)
 				navigate(AppRoutes.Home())
 			})
 			.catch((error) => {
-				console.log('Unable to create new user:', error)
+				console.log('Unable to register new user:', error)
 			})
 	}
 
