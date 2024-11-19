@@ -1,7 +1,10 @@
 import { BrowserRouter } from 'react-router-dom'
+import useFirebaseAuth from '../hooks/useFirebaseAuth'
 import AppRouter from './AppRouter'
 
 function App() {
+	useFirebaseAuth()
+
 	return (
 		<BrowserRouter
 			future={{
