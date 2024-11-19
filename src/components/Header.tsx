@@ -5,6 +5,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import AppRoutes from '../constants/AppRoutes'
 import useAuthStore from '../hooks/useAuthStore'
 import { auth } from '../lib/Firebase'
+import Encryption from '../utils/Encryption'
 
 type NavProps = {
 	pathname: string
@@ -23,19 +24,8 @@ const AuthenticatedNav = ({ pathname, user }: NavProps) => {
 	useEffect(() => {
 		let isAlive = true
 
-		const sha256 = async (message: string) => {
-			const encoder = new TextEncoder()
-			const data = encoder.encode(message)
-			const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-
-			const hashArray = Array.from(new Uint8Array(hashBuffer))
-			const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
-
-			return hashHex
-		}
-
 		const getGravatarUrl = async () => {
-			const hashedEmail = await sha256(user?.email!)
+			const hashedEmail = await Encryption.sha256(user?.email!)
 			const gravatarUrl = `https://www.gravatar.com/avatar/${hashedEmail}?s=40`
 
 			return gravatarUrl
@@ -68,6 +58,12 @@ const AuthenticatedNav = ({ pathname, user }: NavProps) => {
 				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Home()} active={pathname === AppRoutes.Home()}>
 					Home
 				</Navbar.Link>
+				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Exchanges()} active={pathname === AppRoutes.Exchanges()}>
+					Exchanges
+				</Navbar.Link>
+				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Wishlists()} active={pathname === AppRoutes.Wishlists()}>
+					Wishlists
+				</Navbar.Link>
 			</Navbar.Collapse>
 		</>
 	)
@@ -76,15 +72,36 @@ const AuthenticatedNav = ({ pathname, user }: NavProps) => {
 const UnauthenticatedNav = ({ pathname }: NavProps) => {
 	return (
 		<>
-			<Navbar.Toggle />
+			<div className='flex md:order-2 gap-2'>
+				<Navbar.Collapse className='hidden md:block'>
+					<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Login()} active={pathname === AppRoutes.Login()}>
+						Login
+					</Navbar.Link>
+					<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Register()} active={pathname === AppRoutes.Register()}>
+						Register
+					</Navbar.Link>
+				</Navbar.Collapse>
+				<Navbar.Toggle />
+			</div>
 			<Navbar.Collapse>
 				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Home()} active={pathname === AppRoutes.Home()}>
 					Home
 				</Navbar.Link>
-				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Login()} active={pathname === AppRoutes.Login()}>
+				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Exchanges()} active={pathname === AppRoutes.Exchanges()}>
+					Exchanges
+				</Navbar.Link>
+				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Wishlists()} active={pathname === AppRoutes.Wishlists()}>
+					Wishlists
+				</Navbar.Link>
+				<Navbar.Link as={NavLink} className='text-base font-light md:hidden' to={AppRoutes.Login()} active={pathname === AppRoutes.Login()}>
 					Login
 				</Navbar.Link>
-				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Register()} active={pathname === AppRoutes.Register()}>
+				<Navbar.Link
+					as={NavLink}
+					className='text-base font-light md:hidden'
+					to={AppRoutes.Register()}
+					active={pathname === AppRoutes.Register()}
+				>
 					Register
 				</Navbar.Link>
 			</Navbar.Collapse>
@@ -97,8 +114,8 @@ const Header = () => {
 	const { pathname } = useLocation()
 
 	return (
-		<Navbar className='shadow-md sticky top-0 flex items-center' style={{ height: 60 }}>
-			<Navbar.Brand as={Link} to={AppRoutes.Home()}>
+		<Navbar className='sticky top-0' fluid>
+			<Navbar.Brand as={Link} to={AppRoutes.Home()} className='h-14'>
 				<span className='self-center whitespace-nowrap text-xl font-semibold dark:text-white'>Secret Santa</span>
 			</Navbar.Brand>
 			{user && user.uid ? <AuthenticatedNav pathname={pathname} user={user} /> : <UnauthenticatedNav pathname={pathname} />}
