@@ -18,9 +18,7 @@ const Register = () => {
 		if (!email || !password) return
 
 		createUserWithEmailAndPassword(auth, email, password)
-			.then((userCredential) => {
-				const user = userCredential.user
-				console.log('New user registered', user)
+			.then(() => {
 				navigate(AppRoutes.Home())
 			})
 			.catch((error) => {

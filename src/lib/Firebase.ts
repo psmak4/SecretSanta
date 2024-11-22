@@ -5,13 +5,13 @@ import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore'
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions'
 
 const firebaseConfig = {
-	apiKey: 'AIzaSyDCkT-CpBiZjisJw3YFlXAnDeIhLW3OHlI',
-	authDomain: 'secretsanta-68851.firebaseapp.com',
-	projectId: 'secretsanta-68851',
-	storageBucket: 'secretsanta-68851.firebasestorage.app',
-	messagingSenderId: '1003865945454',
-	appId: '1:1003865945454:web:0085da393ddf49087f3d7f',
-	measurementId: 'G-6N7RSQRD2K',
+	apiKey: String(import.meta.env.VITE_FIREBASE_APIKEY),
+	authDomain: String(import.meta.env.VITE_FIREBASE_AUTHDOMAIN),
+	projectId: String(import.meta.env.VITE_FIREBASE_PROJECTID),
+	storageBucket: String(import.meta.env.VITE_FIREBASE_STORAGEBUCKET),
+	messagingSenderId: String(import.meta.env.VITE_FIREBASE_MESSAGEINGSENDERID),
+	appId: String(import.meta.env.VITE_FIREBASE_APPID),
+	measurementId: String(import.meta.env.VITE_FIREBASE_MEASUREMENTID),
 }
 
 export const app = initializeApp(firebaseConfig)

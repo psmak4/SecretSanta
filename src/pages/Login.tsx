@@ -18,9 +18,7 @@ const Login = () => {
 		if (!email || !password) return
 
 		signInWithEmailAndPassword(auth, email, password)
-			.then((userCredential) => {
-				const user = userCredential.user
-				console.log('User logged in', user)
+			.then(() => {
 				navigate(AppRoutes.Home())
 			})
 			.catch((error) => {
