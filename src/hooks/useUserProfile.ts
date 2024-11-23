@@ -3,45 +3,74 @@ import { doc, onSnapshot } from 'firebase/firestore'
 import { useEffect } from 'react'
 import { create } from 'zustand'
 import { db } from '../lib/Firebase'
+import WishlistService from '../services/WishlistService'
+import ExchangeService from '../services/exchangeService'
+import Exchange from '../types/Exchange'
+import User from '../types/User'
+import Wishlist from '../types/Wishlist'
+import ArrayUtils from '../utils/ArrayUtils'
 import useAuthStore from './useAuthStore'
 
 type UserProfileState = {
-	exchanges: string[]
-	wishlists: string[]
+	exchangeIds: string[]
+	exchanges: Exchange[]
+	wishlistIds: string[]
+	wishlists: Wishlist[]
 }
 
-const useStore = create<UserProfileState>(() => ({
+const defaultUserProfile: UserProfileState = {
 	exchanges: [],
 	wishlists: [],
-}))
+	exchangeIds: [],
+	wishlistIds: [],
+}
 
-const setExchanges = (exchanges: string[]) => useStore.setState({ exchanges })
+const useStore = create<UserProfileState>(() => defaultUserProfile)
 
-const setWishlists = (wishlists: string[]) => useStore.setState({ wishlists })
+const clearUserProfile = () => useStore.setState(defaultUserProfile)
+
+const setExchanges = (exchanges: Exchange[]) => useStore.setState({ exchanges })
+const setExchangeIds = (exchangeIds: string[]) => useStore.setState({ exchangeIds })
+
+const setWishlists = (wishlists: Wishlist[]) => useStore.setState({ wishlists })
+const setWishlistIds = (wishlistIds: string[]) => useStore.setState({ wishlistIds })
 
 const useUserProfile = () => {
 	const { user } = useAuthStore()
+	const { exchangeIds, exchanges, wishlistIds, wishlists } = useStore((state) => state)
 
 	useEffect(() => {
-		let unsubscribe: Unsubscribe = () => undefined
+		let exchangesUnsubscribe: Unsubscribe = () => undefined
+		let wishlistsUnsubscribe: Unsubscribe = () => undefined
+		let userProfileUnsubscribe: Unsubscribe = () => undefined
 
 		if (user) {
-			unsubscribe = onSnapshot(doc(db, 'users', user.uid), (doc) => {
-				const { exchanges, wishlists } = doc.data() as UserProfileState
-				setExchanges(exchanges)
-				setWishlists(wishlists)
+			userProfileUnsubscribe = onSnapshot(doc(db, 'users', user.uid), (doc) => {
+				const userData = doc.data() as User
+				const { exchangeIds: newExchangeIds, wishlistIds: newWishlistIds } = userData
+
+				if (!ArrayUtils.compareArrays(exchangeIds, newExchangeIds)) {
+					setExchangeIds(newExchangeIds)
+					exchangesUnsubscribe = ExchangeService.GetExchangesSubscriptionByIds(newExchangeIds, setExchanges)
+				}
+
+				if (!ArrayUtils.compareArrays(wishlistIds, newWishlistIds)) {
+					setWishlistIds(newWishlistIds)
+					wishlistsUnsubscribe = WishlistService.GetWishlistsSubscriptionByIds(newWishlistIds, setWishlists)
+				}
 			})
 		} else {
-			setExchanges([])
-			setWishlists([])
+			clearUserProfile()
 		}
 
 		return () => {
-			unsubscribe()
+			exchangesUnsubscribe()
+			wishlistsUnsubscribe()
+			userProfileUnsubscribe()
 		}
 	}, [user])
 
-	return useStore((state) => state)
+	return { exchanges, wishlists }
 }
 
 export default useUserProfile
