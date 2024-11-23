@@ -6,8 +6,8 @@ const UserOnCreate = functions.auth.user().onCreate(async (user) => {
 
 	const newUser = {
 		email: user.email,
-		exchanges: [],
-		wishlists: [],
+		exchangeIds: [],
+		wishlistIds: [],
 	}
 
 	try {
