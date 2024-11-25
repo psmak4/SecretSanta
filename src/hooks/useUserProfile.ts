@@ -8,7 +8,6 @@ import ExchangeService from '../services/exchangeService'
 import Exchange from '../types/Exchange'
 import User from '../types/User'
 import Wishlist from '../types/Wishlist'
-import ArrayUtils from '../utils/ArrayUtils'
 import useAuthStore from './useAuthStore'
 
 type UserProfileState = {
@@ -40,35 +39,50 @@ const useUserProfile = () => {
 	const { exchangeIds, exchanges, wishlistIds, wishlists } = useStore((state) => state)
 
 	useEffect(() => {
-		let exchangesUnsubscribe: Unsubscribe = () => undefined
-		let wishlistsUnsubscribe: Unsubscribe = () => undefined
 		let userProfileUnsubscribe: Unsubscribe = () => undefined
 
 		if (user) {
 			userProfileUnsubscribe = onSnapshot(doc(db, 'users', user.uid), (doc) => {
-				const userData = doc.data() as User
-				const { exchangeIds: newExchangeIds, wishlistIds: newWishlistIds } = userData
-
-				if (!ArrayUtils.compareArrays(exchangeIds, newExchangeIds)) {
-					setExchangeIds(newExchangeIds)
-					exchangesUnsubscribe = ExchangeService.GetExchangesSubscriptionByIds(newExchangeIds, setExchanges)
-				}
-
-				if (!ArrayUtils.compareArrays(wishlistIds, newWishlistIds)) {
-					setWishlistIds(newWishlistIds)
-					wishlistsUnsubscribe = WishlistService.GetWishlistsSubscriptionByIds(newWishlistIds, setWishlists)
-				}
+				const { exchangeIds, wishlistIds } = doc.data() as User
+				setExchangeIds(exchangeIds)
+				setWishlistIds(wishlistIds)
 			})
 		} else {
 			clearUserProfile()
 		}
 
 		return () => {
-			exchangesUnsubscribe()
-			wishlistsUnsubscribe()
 			userProfileUnsubscribe()
 		}
 	}, [user])
+
+	useEffect(() => {
+		let exchangesUnsubscribe: Unsubscribe = () => undefined
+
+		if (exchangeIds.length === 0) {
+			setExchanges([])
+		} else {
+			exchangesUnsubscribe = ExchangeService.GetExchangesSubscriptionByIds(exchangeIds, setExchanges)
+		}
+
+		return () => {
+			exchangesUnsubscribe()
+		}
+	}, [exchangeIds])
+
+	useEffect(() => {
+		let wishlistsUnsubscribe: Unsubscribe = () => undefined
+
+		if (wishlistIds.length === 0) {
+			setWishlists([])
+		} else {
+			wishlistsUnsubscribe = WishlistService.GetWishlistsSubscriptionByIds(wishlistIds, setWishlists)
+		}
+
+		return () => {
+			wishlistsUnsubscribe()
+		}
+	}, [wishlistIds])
 
 	return { exchanges, wishlists }
 }
