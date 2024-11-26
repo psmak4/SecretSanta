@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { FormEvent, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import AppRoutes from '../constants/AppRoutes'
 import { auth } from '../lib/Firebase'
 

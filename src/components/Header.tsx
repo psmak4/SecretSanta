@@ -1,7 +1,7 @@
 import { User, signOut } from 'firebase/auth'
 import { Avatar, Dropdown, Navbar } from 'flowbite-react'
 import { useEffect, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router'
 import AppRoutes from '../constants/AppRoutes'
 import useAuthStore from '../hooks/useAuthStore'
 import { auth } from '../lib/Firebase'

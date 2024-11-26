@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router'
 import EditExchange from '../pages/EditExchange'
 import EditWishlist from '../pages/EditWishlist'
 import ExchangeDetails from '../pages/ExchangeDetails'
