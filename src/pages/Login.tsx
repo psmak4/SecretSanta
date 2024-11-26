@@ -1,5 +1,5 @@
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { FormEvent, useRef } from 'react'
+import { FormEvent, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AppRoutes from '../constants/AppRoutes'
 import { auth } from '../lib/Firebase'
@@ -25,6 +25,10 @@ const Login = () => {
 				console.log('Unable to login:', error)
 			})
 	}
+
+	useEffect(() => {
+		document.title = 'Login'
+	}, [])
 
 	return (
 		<form onSubmit={handleSubmit}>

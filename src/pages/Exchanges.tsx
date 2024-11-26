@@ -1,7 +1,12 @@
+import { useEffect } from 'react'
 import useUserProfile from '../hooks/useUserProfile'
 
 const Exchanges = () => {
 	const { exchanges } = useUserProfile()
+
+	useEffect(() => {
+		document.title = 'Exchanges'
+	}, [])
 
 	return (
 		<ul>

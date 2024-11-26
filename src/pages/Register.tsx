@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { FormEvent, useRef } from 'react'
+import { FormEvent, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AppRoutes from '../constants/AppRoutes'
 import { auth } from '../lib/Firebase'
@@ -25,6 +25,10 @@ const Register = () => {
 				console.log('Unable to register new user:', error)
 			})
 	}
+
+	useEffect(() => {
+		document.title = 'Register'
+	}, [])
 
 	return (
 		<form onSubmit={handleSubmit}>
