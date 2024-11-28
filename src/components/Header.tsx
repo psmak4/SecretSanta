@@ -58,10 +58,20 @@ const AuthenticatedNav = ({ pathname, user }: NavProps) => {
 				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Home()} active={pathname === AppRoutes.Home()}>
 					Home
 				</Navbar.Link>
-				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Exchanges()} active={pathname === AppRoutes.Exchanges()}>
+				<Navbar.Link
+					as={NavLink}
+					className='text-base font-light'
+					to={AppRoutes.Exchanges()}
+					active={pathname.startsWith(AppRoutes.Exchanges())}
+				>
 					Exchanges
 				</Navbar.Link>
-				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Wishlists()} active={pathname === AppRoutes.Wishlists()}>
+				<Navbar.Link
+					as={NavLink}
+					className='text-base font-light'
+					to={AppRoutes.Wishlists()}
+					active={pathname.startsWith(AppRoutes.Wishlists())}
+				>
 					Wishlists
 				</Navbar.Link>
 			</Navbar.Collapse>
@@ -74,10 +84,15 @@ const UnauthenticatedNav = ({ pathname }: NavProps) => {
 		<>
 			<div className='flex md:order-2 gap-2'>
 				<Navbar.Collapse className='hidden md:block'>
-					<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Login()} active={pathname === AppRoutes.Login()}>
+					<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Login()} active={pathname.startsWith(AppRoutes.Login())}>
 						Login
 					</Navbar.Link>
-					<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Register()} active={pathname === AppRoutes.Register()}>
+					<Navbar.Link
+						as={NavLink}
+						className='text-base font-light'
+						to={AppRoutes.Register()}
+						active={pathname.startsWith(AppRoutes.Register())}
+					>
 						Register
 					</Navbar.Link>
 				</Navbar.Collapse>
@@ -87,20 +102,25 @@ const UnauthenticatedNav = ({ pathname }: NavProps) => {
 				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Home()} active={pathname === AppRoutes.Home()}>
 					Home
 				</Navbar.Link>
-				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Exchanges()} active={pathname === AppRoutes.Exchanges()}>
+				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Exchanges()}>
 					Exchanges
 				</Navbar.Link>
-				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Wishlists()} active={pathname === AppRoutes.Wishlists()}>
+				<Navbar.Link as={NavLink} className='text-base font-light' to={AppRoutes.Wishlists()}>
 					Wishlists
 				</Navbar.Link>
-				<Navbar.Link as={NavLink} className='text-base font-light md:hidden' to={AppRoutes.Login()} active={pathname === AppRoutes.Login()}>
+				<Navbar.Link
+					as={NavLink}
+					className='text-base font-light md:hidden'
+					to={AppRoutes.Login()}
+					active={pathname.startsWith(AppRoutes.Login())}
+				>
 					Login
 				</Navbar.Link>
 				<Navbar.Link
 					as={NavLink}
 					className='text-base font-light md:hidden'
 					to={AppRoutes.Register()}
-					active={pathname === AppRoutes.Register()}
+					active={pathname.startsWith(AppRoutes.Register())}
 				>
 					Register
 				</Navbar.Link>
@@ -114,7 +134,7 @@ const Header = () => {
 	const { pathname } = useLocation()
 
 	return (
-		<Navbar className='sticky top-0' fluid>
+		<Navbar className='sticky top-0 z-10 border-gray-200 bg-gray-50'>
 			<Navbar.Brand as={Link} to={AppRoutes.Home()} className='h-14'>
 				<span className='self-center whitespace-nowrap text-xl font-semibold dark:text-white'>Secret Santa</span>
 			</Navbar.Brand>
