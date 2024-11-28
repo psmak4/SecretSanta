@@ -1,8 +1,11 @@
 type Exchange = {
+	budget: number
+	createdBy: string
+	dateCreated: Date
+	description: string
+	exchangeDate: Date
 	id?: string
 	name: string
-	exchangeDate: Date
-	budget: number
 }
 
 export default Exchange

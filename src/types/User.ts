@@ -1,6 +1,6 @@
 type User = {
-	id: string
 	exchangeIds: string[]
+	id: string
 	wishlistIds: string[]
 }
 
