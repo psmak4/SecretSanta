@@ -10,26 +10,42 @@ import NewWishlist from '../pages/NewWishlist'
 import Register from '../pages/Register'
 import WishlistDetails from '../pages/WishlistDetails'
 import Wishlists from '../pages/Wishlists'
+import FormLayout from './FormLayout'
 import Layout from './Layout'
+import ProtectedRoute from './ProtectedRoute'
+import PublicRoute from './PublicRoute'
 
 const AppRouter = () => {
 	return (
 		<Routes>
 			<Route path='/' element={<Layout />}>
 				<Route index element={<Home />} />
-				<Route path='login' element={<Login />} />
-				<Route path='register' element={<Register />} />
-				<Route path='exchanges'>
-					<Route index element={<Exchanges />} />
-					<Route path='new' element={<NewExchange />} />
-					<Route path=':id/edit' element={<EditExchange />} />
-					<Route path=':id' element={<ExchangeDetails />} />
+
+				<Route element={<PublicRoute />}>
+					<Route element={<FormLayout />}>
+						<Route path='login' element={<Login />} />
+						<Route path='register' element={<Register />} />
+					</Route>
 				</Route>
-				<Route path='wishlists'>
-					<Route index element={<Wishlists />} />
-					<Route path='new' element={<NewWishlist />} />
-					<Route path=':id/edit' element={<EditWishlist />} />
-					<Route path=':id' element={<WishlistDetails />} />
+
+				<Route element={<ProtectedRoute />}>
+					<Route path='exchanges'>
+						<Route index element={<Exchanges />} />
+						<Route element={<FormLayout />}>
+							<Route path='new' element={<NewExchange />} />
+							<Route path=':id/edit' element={<EditExchange />} />
+						</Route>
+						<Route path=':id' element={<ExchangeDetails />} />
+					</Route>
+
+					<Route path='wishlists'>
+						<Route index element={<Wishlists />} />
+						<Route element={<FormLayout />}>
+							<Route path='new' element={<NewWishlist />} />
+							<Route path=':id/edit' element={<EditWishlist />} />
+						</Route>
+						<Route path=':id' element={<WishlistDetails />} />
+					</Route>
 				</Route>
 			</Route>
 		</Routes>
