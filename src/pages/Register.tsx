@@ -1,45 +1,81 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { FormEvent, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router'
+import { HR, Label, TextInput } from 'flowbite-react'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import AppForm from '../components/AppForm'
+import Link from '../components/Link'
 import AppRoutes from '../constants/AppRoutes'
 import { auth } from '../lib/Firebase'
 
+const schema = yup
+	.object({
+		email: yup.string().email().required(),
+		password: yup.string().required(),
+	})
+	.required()
+
+interface IRegisterUser extends yup.InferType<typeof schema> {}
+
 const Register = () => {
-	const emailRef = useRef<HTMLInputElement>(null)
-	const passwordRef = useRef<HTMLInputElement>(null)
-	const navigate = useNavigate()
+	const pageTitle = 'Register'
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<IRegisterUser>({
+		resolver: yupResolver(schema),
+	})
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault()
+	const onSubmit = async (data: IRegisterUser) => {
+		try {
+			const { email, password } = data
 
-		const email = emailRef.current?.value ?? ''
-		const password = passwordRef.current?.value ?? ''
-
-		if (!email || !password) return
-
-		createUserWithEmailAndPassword(auth, email, password)
-			.then(() => {
-				navigate(AppRoutes.Home())
-			})
-			.catch((error) => {
-				console.log('Unable to register new user:', error)
-			})
+			await createUserWithEmailAndPassword(auth, email, password)
+		} catch (error) {
+			console.error('Error:', error)
+		}
 	}
 
 	useEffect(() => {
-		document.title = 'Register'
+		document.title = pageTitle
 	}, [])
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<>
+			<h1 className='text-2xl text-center'>{pageTitle}</h1>
+			<HR />
+			<AppForm onSubmit={handleSubmit(onSubmit)} submitText='Register'>
+				<div>
+					<Label htmlFor='name' value='Name' className='block mb-2' />
+					<TextInput
+						type='text'
+						id='name'
+						placeholder='name@email.com'
+						color={errors.email ? 'failure' : undefined}
+						helperText={errors.email?.message}
+						{...register('email')}
+					/>
+				</div>
+
+				<div>
+					<Label htmlFor='password' value='Password' className='block mb-2' />
+					<TextInput
+						type='password'
+						id='password'
+						placeholder='********'
+						color={errors.password ? 'failure' : undefined}
+						helperText={errors.password?.message}
+						{...register('password')}
+					/>
+				</div>
+			</AppForm>
+			<HR />
 			<div>
-				<input ref={emailRef} type='text' placeholder='Email' />
+				Already have an account? <Link to={AppRoutes.Login()}>Login</Link>
 			</div>
-			<div>
-				<input ref={passwordRef} type='password' placeholder='Password' />
-			</div>
-			<button type='submit'>Register</button>
-		</form>
+		</>
 	)
 }
 
